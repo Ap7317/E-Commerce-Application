@@ -48,7 +48,7 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
       c.name as category_name,
       c.description as category_description,
       p.average_rating,
-      p.rating_count
+      p.review_count
     FROM products p
     LEFT JOIN categories c ON p.category_id = c.id
     ${whereClause}
@@ -69,10 +69,6 @@ export const getProducts = asyncHandler(async (req: Request, res: Response) => {
 
   const products = productsResult.rows.map(row => ({
     ...row,
-    price: parseFloat(row.price) || 0,
-    average_rating: parseFloat(row.average_rating) || 0,
-    rating_count: parseInt(row.rating_count) || 0,
-    stock_quantity: parseInt(row.stock_quantity) || 0,
     images: row.images || [],
     category: row.category_id ? {
       id: row.category_id,
@@ -116,10 +112,6 @@ export const getProduct = asyncHandler(async (req: Request, res: Response) => {
 
   const product = {
     ...result.rows[0],
-    price: parseFloat(result.rows[0].price) || 0,
-    average_rating: parseFloat(result.rows[0].average_rating) || 0,
-    rating_count: parseInt(result.rows[0].rating_count) || 0,
-    stock_quantity: parseInt(result.rows[0].stock_quantity) || 0,
     images: result.rows[0].images || [],
     category: result.rows[0].category_id ? {
       id: result.rows[0].category_id,
@@ -229,10 +221,6 @@ export const getFeaturedProducts = asyncHandler(async (req: Request, res: Respon
 
   const products = result.rows.map(row => ({
     ...row,
-    price: parseFloat(row.price) || 0,
-    average_rating: parseFloat(row.average_rating) || 0,
-    review_count: parseInt(row.review_count) || 0,
-    stock_quantity: parseInt(row.stock_quantity) || 0,
     images: row.images || [],
     category: row.category_id ? {
       id: row.category_id,

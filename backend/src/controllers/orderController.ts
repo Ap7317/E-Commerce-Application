@@ -50,10 +50,10 @@ export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) 
 
     // Create order
     const orderResult = await client.query(`
-      INSERT INTO orders (user_id, total_amount, status, shipping_address)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO orders (user_id, total_amount, shipping_address)
+      VALUES ($1, $2, $3)
       RETURNING id, created_at
-    `, [userId, total_amount, 'processing', JSON.stringify(shipping_address)]);
+    `, [userId, total_amount, JSON.stringify(shipping_address)]);
 
     const orderId = orderResult.rows[0].id;
 
@@ -83,7 +83,6 @@ export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) 
       order: {
         id: orderId,
         total_amount,
-        status: 'processing',
         created_at: orderResult.rows[0].created_at
       }
     });
@@ -112,18 +111,13 @@ export const getUserOrders = asyncHandler(async (req: AuthRequest, res: Response
           'product_id', oi.product_id,
           'quantity', oi.quantity,
           'price', oi.price,
-          'product', JSON_BUILD_OBJECT(
-            'id', p.id,
-            'name', p.name,
-            'images', p.images,
-            'category_name', c.name
-          )
+          'product_name', p.name,
+          'product_images', p.images
         )
       ) as items
     FROM orders o
     LEFT JOIN order_items oi ON o.id = oi.order_id
     LEFT JOIN products p ON oi.product_id = p.id
-    LEFT JOIN categories c ON p.category_id = c.id
     WHERE o.user_id = $1
     GROUP BY o.id
     ORDER BY o.created_at DESC
@@ -153,18 +147,13 @@ export const getOrder = asyncHandler(async (req: AuthRequest, res: Response) => 
           'product_id', oi.product_id,
           'quantity', oi.quantity,
           'price', oi.price,
-          'product', JSON_BUILD_OBJECT(
-            'id', p.id,
-            'name', p.name,
-            'images', p.images,
-            'category_name', c.name
-          )
+          'product_name', p.name,
+          'product_images', p.images
         )
       ) as items
     FROM orders o
     LEFT JOIN order_items oi ON o.id = oi.order_id
     LEFT JOIN products p ON oi.product_id = p.id
-    LEFT JOIN categories c ON p.category_id = c.id
     WHERE o.id = $1 AND o.user_id = $2
     GROUP BY o.id
   `, [id, userId]);
@@ -239,25 +228,5 @@ export const updateOrderStatus = asyncHandler(async (req: AuthRequest, res: Resp
   res.json({
     message: 'Order status updated successfully',
     order: result.rows[0]
-  });
-});
-
-// Debug: Get raw orders for troubleshooting
-export const getDebugOrders = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const userId = req.user!.id;
-  
-  const ordersResult = await pool.query('SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
-  const orderItemsResult = await pool.query(`
-    SELECT oi.*, p.name as product_name 
-    FROM order_items oi 
-    JOIN products p ON oi.product_id = p.id 
-    JOIN orders o ON oi.order_id = o.id 
-    WHERE o.user_id = $1
-  `, [userId]);
-  
-  res.json({ 
-    orders: ordersResult.rows,
-    orderItems: orderItemsResult.rows,
-    debug: true
   });
 });

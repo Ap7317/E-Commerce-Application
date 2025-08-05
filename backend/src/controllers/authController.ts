@@ -13,7 +13,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, password, role = 'customer' } = req.body;
+  const { name, email, password } = req.body;
 
   // Check if user already exists
   const existingUser = await pool.query(
@@ -31,8 +31,8 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 
   // Create user
   const result = await pool.query(
-    'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role, created_at',
-    [name, email, hashedPassword, role]
+    'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email, role, created_at',
+    [name, email, hashedPassword]
   );
 
   const user = result.rows[0];
@@ -137,7 +137,6 @@ export const registerValidation = [
   body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
   body('email').isEmail().withMessage('Please provide a valid email'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('role').optional().isIn(['customer', 'admin']).withMessage('Role must be either customer or admin'),
 ];
 
 export const loginValidation = [

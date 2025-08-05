@@ -30,21 +30,9 @@ export interface Product {
   images?: string[];
   featured: boolean;
   status: 'active' | 'inactive';
-  average_rating: number;
-  rating_count: number;
   created_at: Date;
   updated_at: Date;
   category?: Category;
-}
-
-export interface Rating {
-  id: number;
-  product_id: number;
-  user_id: number;
-  rating: number;
-  review?: string;
-  created_at: Date;
-  updated_at: Date;
 }
 
 export interface CartItem {

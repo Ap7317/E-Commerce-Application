@@ -5,12 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const formatPrice = (price: number | string): string => {
-  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+export const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-  }).format(numPrice);
+  }).format(price);
 };
 
 export const formatDate = (date: string): string => {
@@ -24,20 +23,4 @@ export const formatDate = (date: string): string => {
 export const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + '...';
-};
-
-export const getInitials = (name: string): string => {
-  return name
-    .split(' ')
-    .map(word => word.charAt(0))
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-};
-
-export const slugify = (text: string): string => {
-  return text
-    .toLowerCase()
-    .replace(/[^\w ]+/g, '')
-    .replace(/ +/g, '-');
 };

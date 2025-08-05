@@ -40,8 +40,8 @@ export const authAPI = {
     return response.data;
   },
 
-  register: async (name: string, email: string, password: string, role: string = 'customer'): Promise<{ token: string; user: User }> => {
-    const response = await api.post('/auth/register', { name, email, password, role });
+  register: async (name: string, email: string, password: string): Promise<{ token: string; user: User }> => {
+    const response = await api.post('/auth/register', { name, email, password });
     return response.data;
   },
 

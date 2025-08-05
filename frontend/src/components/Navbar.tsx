@@ -3,14 +3,13 @@ import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
 import { Button } from '@/components/ui/button';
-import { ModeToggle } from '@/components/mode-toggle';
 
 const Navbar: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
   const { itemCount } = useCartStore();
 
   return (
-    <nav className="bg-background border-b border-border shadow-sm">
+    <nav className="bg-white shadow-md">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -20,19 +19,16 @@ const Navbar: React.FC = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex space-x-8">
-            <Link to="/" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/" className="text-gray-700 hover:text-primary">
               Home
             </Link>
-            <Link to="/products" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link to="/products" className="text-gray-700 hover:text-primary">
               Products
             </Link>
           </div>
 
           {/* Right side */}
           <div className="flex items-center space-x-4">
-            {/* Theme Toggle */}
-            <ModeToggle />
-            
             {/* Cart */}
             <Link to="/cart" className="relative">
               <Button variant="outline" size="sm">
@@ -43,19 +39,12 @@ const Navbar: React.FC = () => {
             {/* Auth */}
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
-                {user?.role === 'admin' && (
-                  <Link to="/admin">
-                    <Button variant="default" size="sm" className="bg-red-600 hover:bg-red-700">
-                      Admin Panel
-                    </Button>
-                  </Link>
-                )}
                 <Link to="/orders">
                   <Button variant="ghost" size="sm">
                     My Orders
                   </Button>
                 </Link>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-gray-700">
                   Hello, {user?.name}
                 </span>
                 <Button variant="outline" size="sm" onClick={logout}>

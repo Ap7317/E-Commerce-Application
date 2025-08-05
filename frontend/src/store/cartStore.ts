@@ -91,21 +91,10 @@ export const useCartStore = create<CartState>((set, get) => ({
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || 'Failed to add to cart');
+      throw new Error('Failed to add to cart');
     }
 
-    // Refresh cart data after adding
-    const cartResponse = await fetch('http://localhost:5000/api/cart', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    if (cartResponse.ok) {
-      const cartData = await cartResponse.json();
-      get().setCart(cartData.cartItems || [], cartData.total || 0, cartData.itemCount || 0);
-    }
+    // Optionally refresh cart data here
   },
 
   updateCartItem: async (productId: number, quantity: number) => {

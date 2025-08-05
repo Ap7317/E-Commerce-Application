@@ -17,8 +17,6 @@ import categoryRoutes from './routes/categories';
 import cartRoutes from './routes/cart';
 import orderRoutes from './routes/orders';
 import userRoutes from './routes/users';
-import adminRoutes from './routes/admin';
-import ratingRoutes from './routes/ratings';
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler';
@@ -48,8 +46,6 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api', ratingRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {
