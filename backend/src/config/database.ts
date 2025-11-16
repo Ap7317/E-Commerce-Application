@@ -96,6 +96,19 @@ export const initializeDatabase = async () => {
       )
     `);
 
+    // Create ratings table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS ratings (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        product_id INTEGER REFERENCES products(id) ON DELETE CASCADE,
+        rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+        review TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, product_id)
+      )
+    `);
+
     // Create indexes for better performance
     await pool.query(`
       CREATE INDEX IF NOT EXISTS idx_products_category ON products(category_id);
@@ -103,6 +116,8 @@ export const initializeDatabase = async () => {
       CREATE INDEX IF NOT EXISTS idx_cart_user ON cart(user_id);
       CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
       CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
+      CREATE INDEX IF NOT EXISTS idx_ratings_product ON ratings(product_id);
+      CREATE INDEX IF NOT EXISTS idx_ratings_user ON ratings(user_id);
     `);
 
     console.log('✅ Database tables initialized successfully');

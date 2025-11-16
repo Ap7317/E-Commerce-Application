@@ -1,216 +1,464 @@
-# E-Commerce Website
+# 🛒 E-Commerce Application
 
-A full-stack e-commerce application built with React.js, TypeScript, Tailwind CSS, and Shadcn/ui for the frontend, and Node.js with PostgreSQL for the backend.
+A full-stack e-commerce application built with **React.js**, **TypeScript**, **Tailwind CSS**, and **PostgreSQL**. Features a complete shopping experience with user authentication, product management, shopping cart, order processing, and a powerful admin dashboard.
 
-## Features
+---
+
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Installation & Setup](#-installation--setup)
+- [Environment Variables](#-environment-variables)
+- [Database Setup](#-database-setup)
+- [Running the Application](#-running-the-application)
+- [Admin Access](#-admin-access)
+- [API Endpoints](#-api-endpoints)
+- [Screenshots](#-screenshots)
+- [License](#-license)
+
+---
+
+## ✨ Features
+
+### 🛍️ Customer Features
+- **User Authentication**
+  - User registration and login with JWT
+  - Password hashing with bcrypt
+  - Forgot password functionality (direct reset without email)
+  - Protected routes with role-based access control
+
+- **Product Browsing**
+  - Browse products with pagination
+  - Search products by name or description
+  - Filter by categories
+  - View featured products
+  - Product detail pages with images
+  - Product ratings and reviews (5-star system)
+
+- **Shopping Cart**
+  - Add products to cart
+  - Update quantities
+  - Remove items
+  - Real-time cart total calculation
+  - Persistent cart (stored in database)
+
+- **Order Management**
+  - Checkout with shipping address
+  - Order placement
+  - Order confirmation page
+  - View order history
+  - Track order status
+
+- **User Profile**
+  - View and update profile information
+  - View order history
+  - Manage account settings
+
+### 👨‍💼 Admin Features
+- **Admin Dashboard**
+  - Real-time statistics (total products, orders, users, revenue)
+  - Quick action cards
+  - Beautiful gradient UI
+
+- **Product Management**
+  - View all products in grid layout
+  - Add new products with full details
+  - Edit existing products
+  - Delete products with confirmation
+  - Upload multiple product images (URLs)
+  - Set product status (active/inactive)
+  - Mark products as featured
+  - Manage stock quantity
+  - Assign products to categories
+
+- **Order Management**
+  - View all orders with customer details
+  - See which products were ordered
+  - Update order status (Pending, Processing, Shipped, Delivered, Cancelled)
+  - Filter orders by status
+  - View order statistics by status
+
+- **User Management**
+  - View all registered users
+  - See user details (name, email, role)
+  - View purchase history per user
+  - Search users by name or email
+  - Track total orders and spending per user
+
+---
+
+## 🛠️ Tech Stack
 
 ### Frontend
-- 🛍️ **Modern UI**: Built with React.js, TypeScript, and Tailwind CSS
-- 🎨 **Beautiful Components**: Using Shadcn/ui component library
-- 🛒 **Shopping Cart**: Add, update, and remove items
-- 🔐 **Authentication**: User registration and login
-- 📱 **Responsive Design**: Mobile-first approach
-- 🎯 **Product Catalog**: Search, filter, and browse products
-- 📦 **Order Management**: Track orders and order history
-- 👤 **User Profile**: Manage user information and preferences
-- 🔒 **Protected Routes**: Role-based access control
+| Technology | Description |
+|-----------|-------------|
+| **React 18** | Modern React with hooks and functional components |
+| **TypeScript** | Type-safe JavaScript for better development experience |
+| **Vite** | Fast build tool and development server |
+| **React Router v6** | Client-side routing with protected routes |
+| **Zustand** | Lightweight state management (auth & cart) |
+| **Axios** | HTTP client with interceptors for authentication |
+| **Tailwind CSS** | Utility-first CSS framework |
+| **Shadcn/ui** | Beautiful and accessible UI components |
+| **Lucide React** | Modern icon library |
 
 ### Backend
-- 🚀 **REST API**: Built with Node.js and Express.js
-- 🔒 **JWT Authentication**: Secure token-based authentication
-- 🗄️ **PostgreSQL Database**: Robust relational database
-- 📝 **Data Validation**: Input validation and sanitization
-- 🛡️ **Security**: Helmet, CORS, and other security middleware
-- 📊 **Admin Dashboard**: Product and order management
-- 🔄 **Real-time Updates**: Live cart and inventory management
+| Technology | Description |
+|-----------|-------------|
+| **Node.js** | JavaScript runtime environment |
+| **Express.js** | Fast, unopinionated web framework |
+| **TypeScript** | Type-safe backend development |
+| **PostgreSQL** | Robust relational database (Neon) |
+| **JWT** | JSON Web Tokens for authentication |
+| **bcryptjs** | Password hashing (12 salt rounds) |
+| **express-validator** | Request validation middleware |
+| **Helmet** | Security middleware |
+| **CORS** | Cross-origin resource sharing |
+| **Morgan** | HTTP request logger |
+| **nodemon** | Auto-restart on file changes |
+| **ts-node** | TypeScript execution for Node.js |
 
-## Tech Stack
+---
 
-### Frontend
-- **React.js 18** - Modern React with hooks
-- **TypeScript** - Type safety and better DX
-- **Tailwind CSS** - Utility-first CSS framework
-- **Shadcn/ui** - Beautiful and accessible UI components
-- **Zustand** - Simple state management
-- **React Router** - Client-side routing
-- **Axios** - HTTP client
-- **Vite** - Fast build tool
-
-### Backend
-- **Node.js** - JavaScript runtime
-- **Express.js** - Web application framework
-- **TypeScript** - Type safety
-- **PostgreSQL** - Relational database
-- **JWT** - JSON Web Tokens for authentication
-- **bcryptjs** - Password hashing
-- **Helmet** - Security middleware
-- **CORS** - Cross-origin resource sharing
-
-## Project Structure
+## 📁 Project Structure
 
 ```
-E-Commerce Website/
-├── backend/                 # Backend API
+E-Commerce-Application/
+├── backend/                      # Backend API Server
 │   ├── src/
-│   │   ├── config/         # Database configuration
-│   │   ├── controllers/    # Route controllers
-│   │   ├── middleware/     # Custom middleware
-│   │   ├── models/         # Data models and types
-│   │   ├── routes/         # API routes
-│   │   ├── scripts/        # Database scripts
-│   │   └── utils/          # Utility functions
+│   │   ├── config/              # Configuration files
+│   │   │   └── database.ts      # PostgreSQL connection & schema
+│   │   ├── controllers/         # Request handlers
+│   │   │   ├── adminController.ts
+│   │   │   ├── authController.ts
+│   │   │   ├── cartController.ts
+│   │   │   ├── categoryController.ts
+│   │   │   ├── orderController.ts
+│   │   │   ├── productController.ts
+│   │   │   └── ratingController.ts
+│   │   ├── middleware/          # Custom middleware
+│   │   │   ├── auth.ts          # JWT authentication
+│   │   │   └── errorHandler.ts  # Error handling
+│   │   ├── models/              # TypeScript types
+│   │   │   └── types.ts
+│   │   ├── routes/              # API routes
+│   │   │   ├── admin.ts
+│   │   │   ├── auth.ts
+│   │   │   ├── cart.ts
+│   │   │   ├── categories.ts
+│   │   │   ├── orders.ts
+│   │   │   ├── products.ts
+│   │   │   ├── ratings.ts
+│   │   │   └── users.ts
+│   │   ├── scripts/             # Database utilities
+│   │   │   ├── createAdmin.ts   # Create admin user
+│   │   │   ├── initDb.ts        # Initialize database
+│   │   │   └── resetAdminPassword.ts
+│   │   └── index.ts             # Server entry point
+│   ├── .env                     # Environment variables
 │   ├── package.json
-│   ├── tsconfig.json
-│   └── README.md
-└── frontend/               # Frontend React app
+│   └── tsconfig.json
+│
+└── frontend/                    # React Frontend
     ├── src/
-    │   ├── components/     # Reusable components
-    │   │   └── ui/        # Shadcn/ui components
-    │   ├── pages/         # Page components
-    │   ├── store/         # Zustand stores
-    │   ├── lib/           # Utilities and API
-    │   ├── types/         # TypeScript types
-    │   └── hooks/         # Custom React hooks
+    │   ├── components/         # Reusable components
+    │   │   ├── ui/            # Shadcn/ui components
+    │   │   │   ├── button.tsx
+    │   │   │   ├── card.tsx
+    │   │   │   ├── dialog.tsx
+    │   │   │   ├── input.tsx
+    │   │   │   ├── label.tsx
+    │   │   │   ├── select.tsx
+    │   │   │   ├── separator.tsx
+    │   │   │   └── textarea.tsx
+    │   │   ├── Footer.tsx
+    │   │   ├── Navbar.tsx
+    │   │   ├── ProductRating.tsx
+    │   │   ├── ProtectedRoute.tsx
+    │   │   └── StarRating.tsx
+    │   ├── pages/             # Page components
+    │   │   ├── admin/
+    │   │   │   └── AdminDashboard.tsx
+    │   │   ├── AdminOrders.tsx
+    │   │   ├── AdminProducts.tsx
+    │   │   ├── AdminUsers.tsx
+    │   │   ├── CartPage.tsx
+    │   │   ├── CategoryPage.tsx
+    │   │   ├── CheckoutPage.tsx
+    │   │   ├── ForgotPasswordPage.tsx
+    │   │   ├── HomePage.tsx
+    │   │   ├── LoginPage.tsx
+    │   │   ├── OrderConfirmationPage.tsx
+    │   │   ├── OrdersPage.tsx
+    │   │   ├── ProductDetailPage.tsx
+    │   │   ├── ProductsPage.tsx
+    │   │   ├── ProfilePage.tsx
+    │   │   └── RegisterPage.tsx
+    │   ├── store/             # Zustand state management
+    │   │   ├── authStore.ts   # Auth state
+    │   │   └── cartStore.ts   # Cart state
+    │   ├── lib/               # Utilities
+    │   │   ├── api.ts         # API client
+    │   │   ├── toast.ts       # Toast notifications
+    │   │   └── utils.ts       # Helper functions
+    │   ├── types/             # TypeScript types
+    │   │   └── index.ts
+    │   ├── App.tsx            # Main app component
+    │   ├── main.tsx           # Entry point
+    │   └── globals.css        # Global styles
     ├── package.json
     ├── vite.config.ts
     └── tailwind.config.js
 ```
 
-## Getting Started
+---
+
+## 🚀 Installation & Setup
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- PostgreSQL database
-- npm or yarn
+- **Node.js** (v16 or higher)
+- **PostgreSQL** database (local or cloud like Neon)
+- **npm** or **yarn** package manager
 
-### Backend Setup
-
-1. Navigate to the backend directory:
+### 1️⃣ Clone the Repository
 ```bash
+git clone https://github.com/yourusername/E-Commerce-Application.git
+cd E-Commerce-Application
+```
+
+### 2️⃣ Backend Setup
+
+```bash
+# Navigate to backend directory
 cd backend
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Set up environment variables:
-```bash
-cp .env.example .env
-```
+# Create .env file
+# Add your environment variables (see below)
 
-4. Update the `.env` file with your configuration:
-```env
-DATABASE_URL=your_postgresql_connection_string_here
-JWT_SECRET=your_super_secret_jwt_key_here
-PORT=5000
-NODE_ENV=development
-FRONTEND_URL=http://localhost:3000
-```
-
-5. Initialize the database:
-```bash
+# Initialize database and create tables
 npm run init-db
-```
 
-6. Start the development server:
-```bash
+# Create admin user
+npm run create-admin
+
+# Start development server
 npm run dev
 ```
 
-The backend API will be available at `http://localhost:5000/api`
+**Backend will run on:** `http://localhost:5000`
 
-### Frontend Setup
+### 3️⃣ Frontend Setup
 
-1. Navigate to the frontend directory:
 ```bash
+# Navigate to frontend directory (from root)
 cd frontend
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Start the development server:
-```bash
+# Start development server
 npm run dev
 ```
 
-The frontend will be available at `http://localhost:3000`
+**Frontend will run on:** `http://localhost:3000`
 
-### Environment Variables
+---
 
-#### Backend (.env)
+## 🔐 Environment Variables
+
+### Backend `.env` file
+Create a `.env` file in the `backend` directory:
+
 ```env
-# Database
-DATABASE_URL=postgresql://username:password@localhost:5432/ecommerce_db
+# Database Configuration (Required)
+DATABASE_URL=postgresql://username:password@host:5432/database
 
-# Authentication
-JWT_SECRET=your-super-secret-jwt-key-make-it-very-long-and-random
+# JWT Secret (Required) - Generate a strong random string
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 
-# Server
+# Server Configuration
 PORT=5000
 NODE_ENV=development
 
-# CORS
+# CORS (Frontend URL)
 FRONTEND_URL=http://localhost:3000
-
-# Optional: Cloudinary (for image uploads)
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-
-# Optional: Stripe (for payments)
-STRIPE_SECRET_KEY=your_stripe_secret_key
-STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 ```
 
-#### Frontend (.env)
+### Frontend `.env` file (Optional)
+Create a `.env` file in the `frontend` directory:
+
 ```env
+# Backend API URL
 VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
-## Database Schema
+---
 
-The application uses the following main tables:
+## 🗄️ Database Setup
 
-- **users** - User accounts and profiles
-- **categories** - Product categories
-- **products** - Product catalog
-- **cart** - Shopping cart items
-- **orders** - Order records
-- **order_items** - Individual items in orders
+### Option 1: Using Neon (Cloud PostgreSQL) - Recommended
+1. Sign up at [Neon.tech](https://neon.tech)
+2. Create a new project
+3. Copy the connection string
+4. Add it to your `.env` file as `DATABASE_URL`
 
-## API Endpoints
+### Option 2: Local PostgreSQL
+```bash
+# Install PostgreSQL
+# Create database
+psql -U postgres
+CREATE DATABASE ecommerce_db;
 
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/profile` - Get user profile
-- `PUT /api/auth/profile` - Update user profile
+# Update DATABASE_URL in .env
+DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/ecommerce_db
+```
 
-### Products
-- `GET /api/products` - Get products (with pagination/filtering)
-- `GET /api/products/featured` - Get featured products
-- `GET /api/products/:id` - Get single product
-- `POST /api/products` - Create product (admin)
-- `PUT /api/products/:id` - Update product (admin)
-- `DELETE /api/products/:id` - Delete product (admin)
+### Initialize Database Tables
+```bash
+cd backend
+npm run init-db
+```
 
-### Categories
-- `GET /api/categories` - Get all categories
-- `POST /api/categories` - Create category (admin)
-- `PUT /api/categories/:id` - Update category (admin)
-- `DELETE /api/categories/:id` - Delete category (admin)
+This creates the following tables:
+- `users` - User accounts (customers and admins)
+- `categories` - Product categories
+- `products` - Product catalog
+- `cart` - Shopping cart items
+- `orders` - Order records
+- `order_items` - Items within orders
+- `ratings` - Product ratings and reviews
 
-### Cart
-- `GET /api/cart` - Get user's cart
-- `POST /api/cart/add` - Add item to cart
-- `PUT /api/cart/:id` - Update cart item
-- `DELETE /api/cart/:id` - Remove cart item
-- `DELETE /api/cart` - Clear cart
+---
+
+## 🎮 Running the Application
+
+### Development Mode
+
+**Start Backend:**
+```bash
+cd backend
+npm run dev
+```
+
+**Start Frontend (in new terminal):**
+```bash
+cd frontend
+npm run dev
+```
+
+### Production Build
+
+**Backend:**
+```bash
+cd backend
+npm run build
+npm start
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm run build
+npm run preview
+```
+
+---
+
+## 👨‍💼 Admin Access
+
+### Create Admin User
+```bash
+cd backend
+npm run create-admin
+```
+
+**Default Admin Credentials:**
+- **Email:** `admin@ecommerce.com`
+- **Password:** `admin123`
+
+### Reset Admin Password
+```bash
+cd backend
+npm run reset-admin
+```
+
+### Admin Dashboard Access
+1. Login with admin credentials
+2. Click "Admin Dashboard" button in navbar
+3. Access admin features:
+   - **Dashboard** - `/admin` - Statistics overview
+   - **Products** - `/admin/products` - Manage products
+   - **Orders** - `/admin/orders` - Manage orders
+   - **Users** - `/admin/users` - View all users
+
+---
+
+## 📡 API Endpoints
+
+### Authentication (`/api/auth`)
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/register` | Register new user | No |
+| POST | `/login` | Login user | No |
+| POST | `/reset-password` | Reset password | No |
+| GET | `/profile` | Get user profile | Yes |
+| PUT | `/profile` | Update profile | Yes |
+
+### Products (`/api/products`)
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/` | Get all products (paginated) | No |
+| GET | `/featured` | Get featured products | No |
+| GET | `/:id` | Get product by ID | No |
+| POST | `/` | Create product | Admin |
+| PUT | `/:id` | Update product | Admin |
+| DELETE | `/:id` | Delete product | Admin |
+
+### Categories (`/api/categories`)
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/` | Get all categories | No |
+| GET | `/:id` | Get category by ID | No |
+| POST | `/` | Create category | Admin |
+| PUT | `/:id` | Update category | Admin |
+| DELETE | `/:id` | Delete category | Admin |
+
+### Cart (`/api/cart`)
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/` | Get user's cart | Yes |
+| POST | `/` | Add item to cart | Yes |
+| PUT | `/:id` | Update cart item quantity | Yes |
+| DELETE | `/:id` | Remove item from cart | Yes |
+
+### Orders (`/api/orders`)
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/my-orders` | Get user's orders | Yes |
+| GET | `/:id` | Get order by ID | Yes |
+| POST | `/` | Create order | Yes |
+| PUT | `/:id/status` | Update order status | Admin |
+
+### Ratings (`/api/ratings`)
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/product/:productId` | Get product ratings | No |
+| GET | `/user/:productId` | Get user's rating for product | Yes |
+| POST | `/` | Create/update rating | Yes |
+| DELETE | `/:id` | Delete rating | Yes |
+
+### Admin (`/api/admin`)
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/stats` | Get dashboard statistics | Admin |
+| GET | `/users` | Get all users | Admin |
+| GET | `/orders` | Get all orders | Admin |
+| PUT | `/orders/:id/status` | Update order status | Admin |
 
 ### Orders
 - `POST /api/orders` - Create new order
@@ -249,41 +497,167 @@ The application uses the following main tables:
 - Role-based access control
 - Input validation and sanitization
 - CORS protection
-- Helmet security headers
-- SQL injection prevention
-- Rate limiting (recommended for production)
+---
 
-## Production Deployment
+## 🎨 Key Features Explained
 
-### Backend Deployment
-1. Build the TypeScript code:
+### Authentication System
+- **JWT-based authentication** with 7-day token expiration
+- **Password hashing** using bcrypt with 12 salt rounds
+- **Role-based access control** (User vs Admin)
+- **Protected routes** on both frontend and backend
+- **Forgot password** feature with direct password reset
+- **Auto-logout** on token expiration
+
+### Shopping Cart
+- **Persistent cart** stored in PostgreSQL database
+- **Real-time updates** when items are added/removed
+- **Stock validation** prevents ordering unavailable items
+- **Cart badge** shows item count in navbar
+- **Cart total** calculated automatically
+
+### Product Management
+- **Image support** via URL array (multiple images per product)
+- **Category assignment** for better organization
+- **Featured products** displayed on homepage
+- **Stock tracking** with quantity management
+- **Active/Inactive status** to hide products without deletion
+- **Search and filter** by name, category, and featured status
+
+### Rating & Review System
+- **5-star rating** with half-star support
+- **Review text** with optional comments
+- **Average rating** calculation per product
+- **One rating per user per product** (update if exists)
+- **Delete own ratings** functionality
+- **Real-time updates** after submission
+
+---
+
+## 🛡️ Security Features
+
+- ✅ **JWT Authentication** with secure token storage
+- ✅ **Password Hashing** using bcrypt (12 rounds)
+- ✅ **SQL Injection Prevention** via parameterized queries
+- ✅ **CORS Protection** with whitelist
+- ✅ **Helmet.js** for HTTP headers security
+- ✅ **Input Validation** using express-validator
+- ✅ **Role-based Authorization** (User/Admin)
+- ✅ **XSS Protection** via React's built-in escaping
+- ✅ **HTTPS Support** ready for production
+
+---
+
+## 📱 Responsive Design
+
+The application is fully responsive and works seamlessly on:
+- 📱 Mobile devices (320px and up)
+- 📱 Tablets (768px and up)
+- 💻 Laptops (1024px and up)
+- 🖥️ Desktop (1280px and up)
+
+---
+
+## 🚀 Deployment
+
+### Backend Deployment (Railway/Render)
 ```bash
+# Build the application
 npm run build
+
+# Start production server
+npm start
 ```
 
-2. Set environment variables for production
-3. Deploy to your preferred platform (Heroku, AWS, DigitalOcean, etc.)
-
-### Frontend Deployment
-1. Build the production bundle:
+### Frontend Deployment (Vercel/Netlify)
 ```bash
+# Build for production
 npm run build
+
+# Output will be in 'dist' folder
 ```
 
-2. Deploy the `dist` folder to your hosting service (Netlify, Vercel, etc.)
+---
 
-## Contributing
+## 📝 Available Scripts
+
+### Backend
+```bash
+npm run dev          # Start development server with nodemon
+npm run build        # Compile TypeScript to JavaScript
+npm start            # Start production server
+npm run init-db      # Initialize database tables
+npm run create-admin # Create admin user
+npm run reset-admin  # Reset admin password
+```
+
+### Frontend
+```bash
+npm run dev          # Start Vite development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Backend won't start
+- Check if port 5000 is already in use
+- Verify DATABASE_URL is correct
+- Ensure PostgreSQL is running
+
+### Frontend can't connect
+- Verify backend is running on port 5000
+- Check CORS settings in backend
+
+### Database errors
+- Run `npm run init-db` to create tables
+- Verify PostgreSQL credentials
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## License
+---
+
+## 📄 License
 
 This project is licensed under the MIT License.
 
-## Support
+---
 
-For support, please open an issue on GitHub or contact the development team.
+## 👨‍💻 Author
+
+**Ap7317**
+- GitHub: [@Ap7317](https://github.com/Ap7317)
+
+---
+
+## 🙏 Acknowledgments
+
+- React Team for the amazing framework
+- Shadcn/ui for beautiful components
+- Tailwind CSS for styling
+- PostgreSQL & Neon for database
+- The open-source community
+
+---
+
+<div align="center">
+
+**Made with ❤️ and TypeScript**
+
+⭐ Star this repo if you find it helpful!
+
+[⬆ Back to Top](#-e-commerce-application)
+
+</div>

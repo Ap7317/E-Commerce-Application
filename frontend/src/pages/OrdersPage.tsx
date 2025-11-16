@@ -145,13 +145,13 @@ const OrdersPage: React.FC = () => {
                   {order.items?.slice(0, 3).map((item) => (
                     <div key={item.id} className="flex items-center space-x-3">
                       <img
-                        src={item.product.images[0] || '/placeholder.png'}
-                        alt={item.product.name}
+                        src={item.product?.images?.[0] || '/placeholder.png'}
+                        alt={item.product?.name || 'Product'}
                         className="w-12 h-12 object-cover rounded"
                       />
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate">
-                          {item.product.name}
+                          {item.product?.name || 'Product'}
                         </p>
                         <p className="text-xs text-gray-500">
                           Qty: {item.quantity} • {formatPrice(parseFloat(item.price.toString()))}

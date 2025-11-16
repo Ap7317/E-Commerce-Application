@@ -28,6 +28,7 @@ interface CartState {
   addToCart: (productId: number, quantity: number) => Promise<void>;
   updateCartItem: (productId: number, quantity: number) => Promise<void>;
   removeFromCart: (productId: number) => Promise<void>;
+  fetchCart: () => Promise<void>;
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
@@ -80,50 +81,116 @@ export const useCartStore = create<CartState>((set, get) => ({
 
   // API methods
   addToCart: async (productId: number, quantity: number) => {
-    const token = localStorage.getItem('token');
-    const response = await fetch('http://localhost:5000/api/cart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ product_id: productId, quantity })
-    });
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('Please login to add items to cart');
+      }
 
-    if (!response.ok) {
-      throw new Error('Failed to add to cart');
+      const response = await fetch('http://localhost:5000/api/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ product_id: productId, quantity })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Add to cart error:', error);
+        throw new Error(error.message || 'Failed to add to cart');
+      }
+
+      const data = await response.json();
+      console.log('✅ Item added to cart:', data);
+      
+      // Refresh cart after adding
+      await get().fetchCart();
+    } catch (error: any) {
+      console.error('❌ Add to cart failed:', error);
+      throw error;
     }
-
-    // Optionally refresh cart data here
   },
 
   updateCartItem: async (productId: number, quantity: number) => {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`http://localhost:5000/api/cart/${productId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({ quantity })
-    });
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('Please login first');
+      }
 
-    if (!response.ok) {
-      throw new Error('Failed to update cart item');
+      const response = await fetch(`http://localhost:5000/api/cart/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ quantity })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to update cart item');
+      }
+
+      await get().fetchCart();
+    } catch (error: any) {
+      console.error('❌ Update cart failed:', error);
+      throw error;
     }
   },
 
   removeFromCart: async (productId: number) => {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`http://localhost:5000/api/cart/${productId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        throw new Error('Please login first');
       }
-    });
 
-    if (!response.ok) {
-      throw new Error('Failed to remove from cart');
+      const response = await fetch(`http://localhost:5000/api/cart/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to remove from cart');
+      }
+
+      await get().fetchCart();
+    } catch (error: any) {
+      console.error('❌ Remove from cart failed:', error);
+      throw error;
+    }
+  },
+
+  fetchCart: async () => {
+    try {
+      const token = localStorage.getItem('token');
+      
+      if (!token) {
+        return;
+      }
+
+      const response = await fetch('http://localhost:5000/api/cart', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        get().setCart(data.cartItems || [], data.total || 0, data.itemCount || 0);
+      }
+    } catch (error) {
+      console.error('❌ Fetch cart failed:', error);
     }
   },
 }));

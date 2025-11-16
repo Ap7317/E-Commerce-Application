@@ -14,9 +14,9 @@ const router = Router();
 router.use(authenticateToken);
 
 router.get('/', getCart);
-router.post('/add', addToCart);
+router.post('/', addToCart);
 router.put('/:id', updateCartItem);
 router.delete('/:id', removeFromCart);
-router.delete('/', clearCart);
+router.delete('/clear', clearCart);
 
 export default router;

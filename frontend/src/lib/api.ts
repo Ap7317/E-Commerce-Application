@@ -175,4 +175,32 @@ export const ordersAPI = {
   },
 };
 
+// Admin API
+export const adminAPI = {
+  getDashboardStats: async (): Promise<{
+    totalProducts: number;
+    totalOrders: number;
+    totalUsers: number;
+    totalRevenue: number;
+  }> => {
+    const response = await api.get('/admin/stats');
+    return response.data;
+  },
+
+  getAllUsers: async (): Promise<{ users: any[] }> => {
+    const response = await api.get('/admin/users');
+    return response.data;
+  },
+
+  getAllOrders: async (): Promise<{ orders: Order[] }> => {
+    const response = await api.get('/admin/orders');
+    return response.data;
+  },
+
+  updateOrderStatus: async (id: number, status: string): Promise<{ order: Order }> => {
+    const response = await api.put(`/admin/orders/${id}/status`, { status });
+    return response.data;
+  },
+};
+
 export default api;

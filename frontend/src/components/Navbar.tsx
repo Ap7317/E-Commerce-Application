@@ -39,11 +39,19 @@ const Navbar: React.FC = () => {
             {/* Auth */}
             {isAuthenticated ? (
               <div className="flex items-center space-x-2">
-                <Link to="/orders">
-                  <Button variant="ghost" size="sm">
-                    My Orders
-                  </Button>
-                </Link>
+                {user?.role === 'admin' ? (
+                  <Link to="/admin">
+                    <Button variant="default" size="sm" className="bg-purple-600 hover:bg-purple-700">
+                      Admin Dashboard
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link to="/orders">
+                    <Button variant="ghost" size="sm">
+                      My Orders
+                    </Button>
+                  </Link>
+                )}
                 <span className="text-sm text-gray-700">
                   Hello, {user?.name}
                 </span>

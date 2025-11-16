@@ -4,6 +4,7 @@ import {
   login,
   getProfile,
   updateProfile,
+  resetPassword,
   registerValidation,
   loginValidation,
 } from '../controllers/authController';
@@ -14,6 +15,7 @@ const router = Router();
 // Public routes
 router.post('/register', registerValidation, register);
 router.post('/login', loginValidation, login);
+router.post('/reset-password', resetPassword);
 
 // Protected routes
 router.get('/profile', authenticateToken, getProfile);

@@ -5,8 +5,8 @@ import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Separator } from '../components/ui/separator';
-import ProductRating from '../components/ProductRating';
 import StarRating from '../components/StarRating';
+import ProductRating from '../components/ProductRating';
 import { 
   Star, 
   ShoppingCart, 

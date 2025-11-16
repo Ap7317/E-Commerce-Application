@@ -38,11 +38,18 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const user = result.rows[0];
 
   // Generate JWT token
+  if (!process.env.JWT_SECRET) {
+    console.error('❌ JWT_SECRET is not defined!');
+    return res.status(500).json({ message: 'Server configuration error' });
+  }
+
   const token = jwt.sign(
     { userId: user.id, email: user.email },
-    process.env.JWT_SECRET!,
+    process.env.JWT_SECRET,
     { expiresIn: '7d' }
   );
+
+  console.log('✅ User registered:', user.email);
 
   res.status(201).json({
     message: 'User created successfully',
@@ -84,11 +91,18 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // Generate JWT token
+  if (!process.env.JWT_SECRET) {
+    console.error('❌ JWT_SECRET is not defined!');
+    return res.status(500).json({ message: 'Server configuration error' });
+  }
+
   const token = jwt.sign(
     { userId: user.id, email: user.email },
-    process.env.JWT_SECRET!,
+    process.env.JWT_SECRET,
     { expiresIn: '7d' }
   );
+
+  console.log('✅ User logged in:', user.email);
 
   res.json({
     message: 'Login successful',
@@ -130,6 +144,43 @@ export const updateProfile = asyncHandler(async (req: AuthRequest, res: Response
     message: 'Profile updated successfully',
     user: result.rows[0],
   });
+});
+
+// Reset password (forgot password)
+export const resetPassword = asyncHandler(async (req: Request, res: Response) => {
+  const { email, newPassword } = req.body;
+
+  if (!email || !newPassword) {
+    return res.status(400).json({ message: 'Email and new password are required' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ message: 'Password must be at least 6 characters' });
+  }
+
+  // Find user
+  const result = await pool.query(
+    'SELECT id FROM users WHERE email = $1',
+    [email]
+  );
+
+  if (result.rows.length === 0) {
+    return res.status(404).json({ message: 'User not found with this email' });
+  }
+
+  // Hash new password
+  const saltRounds = 12;
+  const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+  // Update password
+  await pool.query(
+    'UPDATE users SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE email = $2',
+    [hashedPassword, email]
+  );
+
+  console.log('✅ Password reset for:', email);
+
+  res.json({ message: 'Password reset successfully' });
 });
 
 // Validation rules

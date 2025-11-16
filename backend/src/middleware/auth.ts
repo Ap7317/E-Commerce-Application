@@ -20,10 +20,16 @@ export const authenticateToken = async (
     const token = authHeader && authHeader.split(' ')[1];
 
     if (!token) {
+      console.log('❌ No token provided');
       return res.status(401).json({ message: 'Access token required' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    if (!process.env.JWT_SECRET) {
+      console.error('❌ JWT_SECRET is not defined in environment variables!');
+      return res.status(500).json({ message: 'Server configuration error' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as any;
     
     // Get user from database
     const result = await pool.query(
@@ -32,12 +38,15 @@ export const authenticateToken = async (
     );
 
     if (result.rows.length === 0) {
+      console.log('❌ User not found for token');
       return res.status(401).json({ message: 'Invalid token' });
     }
 
     req.user = result.rows[0];
+    console.log('✅ User authenticated:', result.rows[0].email);
     next();
   } catch (error) {
+    console.error('❌ Token verification error:', error);
     return res.status(401).json({ message: 'Invalid token' });
   }
 };

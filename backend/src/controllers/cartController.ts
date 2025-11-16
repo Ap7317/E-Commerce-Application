@@ -48,6 +48,13 @@ export const addToCart = asyncHandler(async (req: AuthRequest, res: Response) =>
   const userId = req.user!.id;
   const { product_id, quantity = 1 } = req.body;
 
+  console.log(`🛒 Adding to cart - User: ${userId}, Product: ${product_id}, Quantity: ${quantity}`);
+
+  if (!product_id) {
+    console.log('❌ No product_id provided');
+    return res.status(400).json({ message: 'Product ID is required' });
+  }
+
   // Check if product exists and is active
   const productResult = await pool.query(
     'SELECT id, stock_quantity FROM products WHERE id = $1 AND status = $2',
@@ -55,6 +62,7 @@ export const addToCart = asyncHandler(async (req: AuthRequest, res: Response) =>
   );
 
   if (productResult.rows.length === 0) {
+    console.log(`❌ Product ${product_id} not found`);
     return res.status(404).json({ message: 'Product not found' });
   }
 
@@ -90,6 +98,7 @@ export const addToCart = asyncHandler(async (req: AuthRequest, res: Response) =>
     );
   }
 
+  console.log(`✅ Item added to cart successfully - User: ${userId}, Product: ${product_id}`);
   res.json({ message: 'Item added to cart successfully' });
 });
 
