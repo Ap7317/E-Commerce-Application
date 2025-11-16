@@ -276,10 +276,12 @@ Create a `.env` file in the `backend` directory:
 
 ```env
 # Database Configuration (Required)
-DATABASE_URL=postgresql://username:password@host:5432/database
+# Get your connection string from your PostgreSQL provider (Neon, Railway, etc.)
+DATABASE_URL=postgresql://username:password@hostname:port/database_name
 
-# JWT Secret (Required) - Generate a strong random string
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+# JWT Secret (Required) - Generate a strong random string (min 32 characters)
+# You can generate one using: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+JWT_SECRET=your_jwt_secret_key_here
 
 # Server Configuration
 PORT=5000
@@ -288,6 +290,8 @@ NODE_ENV=development
 # CORS (Frontend URL)
 FRONTEND_URL=http://localhost:3000
 ```
+
+> ⚠️ **Security Warning:** Never commit your `.env` file to git. Keep your credentials secure!
 
 ### Frontend `.env` file (Optional)
 Create a `.env` file in the `frontend` directory:
@@ -314,8 +318,8 @@ VITE_API_BASE_URL=http://localhost:5000/api
 psql -U postgres
 CREATE DATABASE ecommerce_db;
 
-# Update DATABASE_URL in .env
-DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/ecommerce_db
+# Update DATABASE_URL in .env with your local credentials
+DATABASE_URL=postgresql://postgres:your_password@localhost:5432/ecommerce_db
 ```
 
 ### Initialize Database Tables
